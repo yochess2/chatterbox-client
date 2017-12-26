@@ -21,11 +21,14 @@ var app = {
     // event listners
     app.$newRoom.on('click', app.handleNewroom);
     app.$roomSelect.on('change', app.handleChangeroom);
+    app.$roomSelect.on('click', function(evt) {
+      clearInterval(app._fetch);
+    });
     app.$send.on('submit', app.handleSubmit);
     app.$chats.on('click', '.username', app.addFriend);
 
     app.fetch();
-    setInterval(function() {
+    app._fetch = setInterval(function() {
       app.fetch();
     }, 1000);
   },
@@ -36,6 +39,7 @@ var app = {
       data: JSON.stringify(message),
       success: function() {
         console.log('sent');
+        app.$messageText.val('');
         app.fetch();
       },
       error: function(err) {
@@ -110,6 +114,9 @@ var app = {
   handleChangeroom: function(event) {
     app.currentroom = app.$roomSelect.val();
     app.fetch();
+    app._fetch = setInterval(function() {
+      app.fetch();
+    }, 1000);
   },
   clearMessages: function() {
     app.$chats.empty();
