@@ -14,10 +14,10 @@ Server is now functioning locally. On to the todos! I've finished most of the te
 A lot of the features are not on the todos though, so I'll have to gauge them.
 
 ## Estimated Todos:
-- [ ] finish specs
-- [ ] room feature
-- [ ] chat feature
-- [ ] styling (nice to have)
+- [x] finish specs
+- [x] room feature
+- [x] chat feature
+- [ ] more friend feature
 
 ## What I (re)learned:
 - ajax calls
