@@ -7,6 +7,7 @@ var app = {
     app.username = window.location.search.slice(10);
     app.availablerooms = ['lobby'];
     app.currentroom = app.availablerooms[0];
+    app.friends = [];
 
     // new message variables
     app.$roomSelect = $('#roomSelect');
@@ -21,11 +22,12 @@ var app = {
     app.$newRoom.on('click', app.handleNewroom);
     app.$roomSelect.on('change', app.handleChangeroom);
     app.$send.on('submit', app.handleSubmit);
+    app.$chats.on('click', '.username', app.addFriend);
 
     app.fetch();
     setInterval(function() {
       app.fetch();
-    }, 3000);
+    }, 1000);
   },
   send: function(message) {
     $.ajax({
@@ -43,12 +45,11 @@ var app = {
     });
   },
   fetch: function() {
-    console.log('fetching');
     $.ajax({
       type: 'GET',
       url: app.server,
       success: function(data) {
-        app.populateRooms(data.results);
+        app.populateRooms(data.results.reverse());
         app.populateMessages(data.results);
       },
       error: function(err) {
@@ -115,8 +116,6 @@ var app = {
   },
   populateMessages: function(messages) {
     app.$chats.empty();
-    var $h1 = $('<h1/>').text(app.currentroom)
-    app.$chats.append($h1);
     messages.forEach(function(message) {
       if (app.currentroom === message.roomname) {
         app.addMessage(message);
@@ -125,9 +124,9 @@ var app = {
   },
   addMessage: function(message) {
     var $chat = $('<div/>')
-      .addClass('message-chat');
+      .addClass('chat');
     var $username = $('<span/>')
-      .addClass('message-username')
+      .addClass('username')
       .text(message.username + ': ')
       .css("font-weight","Bold");
     var $text = $('<span/>')
@@ -146,5 +145,19 @@ var app = {
     };
     app.send(message);
     event.preventDefault();
+  },
+  addFriend: function(evt) {
+    var newFriend = $(this).text();
+    var friendExist = false;
+    app.friends.forEach(function(friend) {
+      if (friend === newFriend) {
+        friendExist = true;
+      }
+    });
+    if (!friendExist) {
+      app.friends.push(newFriend);
+    } else {
+      alert(newFriend + ' already exists!');
+    }
   }
 };
