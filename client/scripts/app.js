@@ -2,6 +2,8 @@ var app = {
   server: 'http://127.0.0.1:3000/classes/messages',
   init: function () {
     console.log('app init');
+    app.$chats = $('#chats');
+    app.$roomSelect = $('#roomSelect');
   },
   send: function(message) {
     $.ajax({
@@ -28,5 +30,23 @@ var app = {
         console.log(err);
       }
     });
+  },
+  clearMessages: function() {
+    app.$chats.empty();
+  },
+  addMessage: function(message) {
+    var $chat = $('<div/>').addClass('message-chat');
+    var $username = $('<span/>').addClass('message-username').text(message.username);
+    var $text = $('<span/>').addClass('message-text').text(message.text);
+    var $roomname = $('<span/>').addClass('message-roomname').text(message.roomname);
+    $chat
+      .append($username)
+      .append($text)
+      .append($roomname);
+    app.$chats.append($chat);
+  },
+  addRoom: function(roomname) {
+    var $option = $('<option/>').val(roomname).text(roomname);
+    app.$roomSelect.append($option);
   }
 };
